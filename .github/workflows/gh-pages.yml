@@ -17,24 +17,31 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4    # latest major version of checkout:contentReference[oaicite:0]{index=0}
+        uses: actions/checkout@v4
 
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4  # latest major version of setup-dotnet:contentReference[oaicite:1]{index=1}
+      - name: Setup .NET 9.0
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "9.0.x"
 
       - name: Publish project
-        env:
-          REPOSITORY_NAME: ${{ github.event.repository.name }}
         run: |
-          dotnet publish RosaryBlazor.csproj -c Release -o publish 
+          dotnet publish RosaryBlazor.csproj -c Release -o publish
           touch publish/wwwroot/.nojekyll
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3  # upgrade from @v2 → @v3 per deprecation notice:contentReference[oaicite:2]{index=2}
+      - name: Rewrite base href
+        uses: SteveSandersonMS/ghaction-rewrite-base-href@v1
+        with:
+          # Point to the index.html you just published:
+          html_path: publish/wwwroot/index.html
+          # Match the folder name under GitHub Pages (i.e. repo slug):
+          base_href: /RosaryBlazor/
+
+      - name: Upload artifact for Pages
+        uses: actions/upload-pages-artifact@v3
         with:
           path: ./publish/wwwroot
 
@@ -47,4 +54,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4   # upgrade from @v2 → @v4 per deprecation notice:contentReference[oaicite:3]{index=3}
+        uses: actions/deploy-pages@v4
