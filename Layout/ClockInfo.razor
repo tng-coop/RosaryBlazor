@@ -1,0 +1,43 @@
+@implements IDisposable
+@using System.Globalization
+<div class="clock-info">
+    <div class="clock-time">@currentTime.ToString("HH:mm:ss")</div>
+    <div>@currentTime.ToString("dddd, MMMM dd, yyyy")</div>
+    <div>Day of Week: @currentTime.DayOfWeek</div>
+    <div>Day of Year: @currentTime.DayOfYear</div>
+    <div>Week of Year: @WeekOfYear(currentTime)</div>
+</div>
+
+@code {
+    private DateTime currentTime;
+    private System.Timers.Timer? timer;
+
+    protected override void OnInitialized()
+    {
+        currentTime = DateTime.Now;
+        timer = new System.Timers.Timer(1000);
+        timer.Elapsed += OnTimerElapsed;
+        timer.AutoReset = true;
+        timer.Start();
+    }
+
+    private void OnTimerElapsed(object? sender, System.Timers.ElapsedEventArgs e)
+    {
+        InvokeAsync(() =>
+        {
+            currentTime = DateTime.Now;
+            StateHasChanged();
+        });
+    }
+
+    private static int WeekOfYear(DateTime date)
+    {
+        var culture = CultureInfo.CurrentCulture;
+        return culture.Calendar.GetWeekOfYear(date, CalendarWeekRule.FirstFullWeek, DayOfWeek.Sunday);
+    }
+
+    public void Dispose()
+    {
+        timer?.Dispose();
+    }
+}
