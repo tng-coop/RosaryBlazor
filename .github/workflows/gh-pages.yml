@@ -19,10 +19,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4    # latest major version of checkout:contentReference[oaicite:0]{index=0}
 
       - name: Setup .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v4  # latest major version of setup-dotnet:contentReference[oaicite:1]{index=1}
         with:
           dotnet-version: "9.0.x"
 
@@ -35,7 +35,7 @@ jobs:
           touch publish/wwwroot/.nojekyll
 
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v3  # upgrade from @v2 → @v3 per deprecation notice:contentReference[oaicite:2]{index=2}
         with:
           path: ./publish/wwwroot
 
@@ -48,5 +48,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
-
+        uses: actions/deploy-pages@v4   # upgrade from @v2 → @v4 per deprecation notice:contentReference[oaicite:3]{index=3}
