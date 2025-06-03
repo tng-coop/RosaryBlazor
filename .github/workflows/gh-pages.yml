@@ -30,14 +30,13 @@ jobs:
         env:
           REPOSITORY_NAME: ${{ github.event.repository.name }}
         run: |
-          dotnet publish RosaryBlazor.csproj -c Release -o publish \
-            -p:StaticWebAssetBasePath="/$REPOSITORY_NAME"
+          dotnet publish RosaryBlazor.csproj -c Release -o publish 
           touch publish/wwwroot/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3  # upgrade from @v2 → @v3 per deprecation notice:contentReference[oaicite:2]{index=2}
         with:
-          path: ./publish/wwwroot/RosaryBlazor
+          path: ./publish/wwwroot
 
   deploy:
     needs: build
