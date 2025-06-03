@@ -37,7 +37,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3  # upgrade from @v2 → @v3 per deprecation notice:contentReference[oaicite:2]{index=2}
         with:
-          path: ./publish/wwwroot
+          path: ./publish/wwwroot/RosaryBlazor
 
   deploy:
     needs: build
